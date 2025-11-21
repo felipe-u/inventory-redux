@@ -1,10 +1,12 @@
-import { products } from '../mock/products'
+import { store } from '../store'
 
 interface Props {
   showFormModal: (mode: string) => void
 }
 
 export function ProductList({ showFormModal }: Props) {
+  const products = store.getState().products
+
   return (
     <section>
       <table className='products-table'>
