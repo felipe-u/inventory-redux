@@ -1,6 +1,10 @@
 import { products } from '../mock/products'
 
-export function ProductList() {
+interface Props {
+  showFormModal: (mode: string) => void
+}
+
+export function ProductList({ showFormModal }: Props) {
   return (
     <section>
       <table className='products-table'>
@@ -18,7 +22,7 @@ export function ProductList() {
         <tbody>
           <tr className='new-product-row'>
             <td colSpan={7}>
-              <button>New Product</button>
+              <button onClick={() => showFormModal('new')}>New Product</button>
             </td>
           </tr>
           {products.map((product) => (
@@ -36,7 +40,7 @@ export function ProductList() {
                 <button>+</button>
               </td>
               <td>
-                <button>Edit</button>
+                <button onClick={() => showFormModal('edit')}>Edit</button>
                 <button>Delete</button>
               </td>
             </tr>
