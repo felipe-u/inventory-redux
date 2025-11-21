@@ -1,13 +1,26 @@
 import { useAppSelector } from '../hooks/store'
 import { useProductsActions } from '../hooks/useProductsActions'
+import type { ProductId } from '../types'
 
 interface Props {
-  showFormModal: (mode: string, productId: number | null) => void
+  showFormModal: (mode: string, productId: ProductId | null) => void
 }
 
 export function ProductList({ showFormModal }: Props) {
   const products = useAppSelector((state) => state.products)
-  const { deleteProduct } = useProductsActions()
+  const { deleteProduct, updateStock } = useProductsActions()
+
+  const handleStockAdj = (
+    productId: ProductId,
+    prevStock: number,
+    adjust: number
+  ) => {
+    if (adjust === -1 && prevStock === 0) {
+      alert("Stock can't be negative")
+      return
+    }
+    updateStock(productId, adjust)
+  }
 
   return (
     <section>
@@ -41,9 +54,13 @@ export function ProductList({ showFormModal }: Props) {
               <td>{product.category}</td>
               <td>${product.price}</td>
               <td>
-                <button>-</button>
+                <button
+                  onClick={() => handleStockAdj(product.id, product.stock, -1)}
+                >
+                  -
+                </button>
                 {product.stock}
-                <button>+</button>
+                <button onClick={() => updateStock(product.id, 1)}>+</button>
               </td>
               <td>
                 <button onClick={() => showFormModal('edit', product.id)}>

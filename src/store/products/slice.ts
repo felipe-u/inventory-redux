@@ -3,6 +3,11 @@ import { products } from '../../mock/products'
 import type { Product, ProductId, ProductWithId } from '../../types'
 import { generateRandomId } from '../../util'
 
+type AdjustStockPayload = {
+  id: ProductId
+  adjust: number
+}
+
 export const productsSlice = createSlice({
   name: 'products',
   initialState: products,
@@ -22,10 +27,17 @@ export const productsSlice = createSlice({
       if (index === -1) return
       state[index] = action.payload
     },
+    adjustStock: (state, action: PayloadAction<AdjustStockPayload>) => {
+      const index = state.findIndex(
+        (product) => product.id === action.payload.id
+      )
+      if (index === -1) return
+      state[index].stock += action.payload.adjust
+    },
   },
 })
 
 export default productsSlice.reducer
 
-export const { addNewProduct, deleteProductById, editProduct } =
+export const { addNewProduct, deleteProductById, editProduct, adjustStock } =
   productsSlice.actions

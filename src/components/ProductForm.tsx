@@ -120,6 +120,7 @@ export function ProductForm({ hideFormModal, showForm }: Props) {
             onChange={handleInputChange}
             required
             min={0}
+            disabled={showForm.mode === 'edit'}
           />
         </div>
 
