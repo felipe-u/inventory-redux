@@ -1,4 +1,4 @@
-export const products = [
+export const DEFAULT_PRODUCTS = [
   {
     id: 1,
     title: 'Uppland',

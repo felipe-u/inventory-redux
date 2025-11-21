@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import { products } from '../../mock/products'
+import { DEFAULT_PRODUCTS } from '../../mock/products'
 import type { Product, ProductId, ProductWithId } from '../../types'
 import { generateRandomId } from '../../util'
 
@@ -8,9 +8,14 @@ type AdjustStockPayload = {
   adjust: number
 }
 
+const initialState: ProductWithId[] = (() => {
+  const persistedState = localStorage.getItem('_redux_inventory_state_')
+  return persistedState ? JSON.parse(persistedState).products : DEFAULT_PRODUCTS
+})()
+
 export const productsSlice = createSlice({
   name: 'products',
-  initialState: products,
+  initialState: initialState,
   reducers: {
     addNewProduct: (state, action: PayloadAction<Product>) => {
       const id = generateRandomId()
