@@ -1,4 +1,5 @@
 import { useAppSelector } from '../hooks/store'
+import { useProductsActions } from '../hooks/useProductsActions'
 
 interface Props {
   showFormModal: (mode: string) => void
@@ -6,6 +7,7 @@ interface Props {
 
 export function ProductList({ showFormModal }: Props) {
   const products = useAppSelector((state) => state.products)
+  const { deleteProduct } = useProductsActions()
 
   return (
     <section>
@@ -43,7 +45,9 @@ export function ProductList({ showFormModal }: Props) {
               </td>
               <td>
                 <button onClick={() => showFormModal('edit')}>Edit</button>
-                <button>Delete</button>
+                <button onClick={() => deleteProduct(product.id)}>
+                  Delete
+                </button>
               </td>
             </tr>
           ))}
