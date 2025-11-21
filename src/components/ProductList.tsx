@@ -2,7 +2,7 @@ import { useAppSelector } from '../hooks/store'
 import { useProductsActions } from '../hooks/useProductsActions'
 
 interface Props {
-  showFormModal: (mode: string) => void
+  showFormModal: (mode: string, productId: number | null) => void
 }
 
 export function ProductList({ showFormModal }: Props) {
@@ -26,7 +26,9 @@ export function ProductList({ showFormModal }: Props) {
         <tbody>
           <tr className='new-product-row'>
             <td colSpan={7}>
-              <button onClick={() => showFormModal('new')}>New Product</button>
+              <button onClick={() => showFormModal('new', null)}>
+                New Product
+              </button>
             </td>
           </tr>
           {products.map((product) => (
@@ -44,7 +46,9 @@ export function ProductList({ showFormModal }: Props) {
                 <button>+</button>
               </td>
               <td>
-                <button onClick={() => showFormModal('edit')}>Edit</button>
+                <button onClick={() => showFormModal('edit', product.id)}>
+                  Edit
+                </button>
                 <button onClick={() => deleteProduct(product.id)}>
                   Delete
                 </button>

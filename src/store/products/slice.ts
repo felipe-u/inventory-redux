@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { products } from '../../mock/products'
-import type { Product, ProductId } from '../../types'
+import type { Product, ProductId, ProductWithId } from '../../types'
 import { generateRandomId } from '../../util'
 
 export const productsSlice = createSlice({
@@ -15,9 +15,17 @@ export const productsSlice = createSlice({
       const id = action.payload
       return state.filter((product) => product.id !== id)
     },
+    editProduct: (state, action: PayloadAction<ProductWithId>) => {
+      const index = state.findIndex(
+        (product) => product.id === action.payload.id
+      )
+      if (index === -1) return
+      state[index] = action.payload
+    },
   },
 })
 
 export default productsSlice.reducer
 
-export const { addNewProduct, deleteProductById } = productsSlice.actions
+export const { addNewProduct, deleteProductById, editProduct } =
+  productsSlice.actions

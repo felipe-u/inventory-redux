@@ -1,33 +1,70 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useProductsActions } from '../hooks/useProductsActions'
+import { useAppSelector } from '../hooks/store'
+import { selectProductById } from '../store/products/selectors'
+import type { Product } from '../types'
+
+const initialFormState = {
+  title: '',
+  category: '',
+  price: 0,
+  stock: 0,
+  thumbnail: '',
+}
 
 interface Props {
   hideFormModal: () => void
-  showForm: { show: boolean; mode: string }
+  showForm: { show: boolean; mode: string; productId: number | null }
 }
 
 export function ProductForm({ hideFormModal, showForm }: Props) {
-  const [thumbnailImg, setThumbnailImg] = useState('')
-  const { addProduct } = useProductsActions()
+  const { addProduct, updateProduct } = useProductsActions()
+  const productId = showForm.productId
+  const product = useAppSelector((state) =>
+    productId ? selectProductById(state, productId) : null
+  )
+  const [form, setForm] = useState<Product>(initialFormState)
+
+  useEffect(() => {
+    if (productId && product) {
+      setForm(product)
+    }
+  }, [productId, product])
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    const form = event.currentTarget
-    const formData = new FormData(form)
-
-    const title = formData.get('title') as string
-    const category = formData.get('category') as string
-    const price = Number(formData.get('price'))
-    const stock = Number(formData.get('stock'))
-    const thumbnail = formData.get('thumbnail') as string
-
-    if (!title || !category || !price || !stock || !thumbnail) {
-      return alert('Missing fields')
+    const { title, category, price, stock, thumbnail } = form
+    if (!title.trim() || !category.trim() || !thumbnail.trim()) {
+      alert('Missing fields')
+      return
     }
-    addProduct({ title, category, price, stock, thumbnail })
-    form.reset()
-    setThumbnailImg('')
+    if (price <= 0) {
+      alert('Price must be greater than zero')
+      return
+    }
+    if (stock < 0) {
+      alert("Stock can't be negative")
+      return
+    }
+
+    if (showForm.mode === 'new') {
+      addProduct(form)
+    } else {
+      updateProduct({ id: productId!, ...form })
+    }
+
+    setForm(initialFormState)
+    hideFormModal()
+  }
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type } = event.target
+    console.log(name, value, type)
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === 'number' ? Number(value) : value,
+    }))
   }
 
   return (
@@ -36,23 +73,54 @@ export function ProductForm({ hideFormModal, showForm }: Props) {
       <form className='product-form' onSubmit={handleSubmit}>
         <div className='input-container'>
           <label htmlFor='title'>Name</label>
-          <input name='title' type='text' placeholder='Product name' />
+          <input
+            name='title'
+            type='text'
+            placeholder='Product name'
+            value={form.title}
+            onChange={handleInputChange}
+            required
+          />
         </div>
 
         <div className='input-container'>
           <label htmlFor='category'>Category</label>
-          <input name='category' type='text' placeholder='Product category' />
+          <input
+            name='category'
+            type='text'
+            placeholder='Product category'
+            value={form.category}
+            onChange={handleInputChange}
+            required
+          />
         </div>
 
         <div className='input-container'>
           <label htmlFor='price'>Price</label>
           <span> $</span>
-          <input name='price' type='number' placeholder='9.99' />
+          <input
+            name='price'
+            type='number'
+            placeholder='9.99'
+            value={form.price}
+            onChange={handleInputChange}
+            required
+            min={0}
+            step={0.01}
+          />
         </div>
 
         <div className='input-container'>
           <label htmlFor='stock'>Stock</label>
-          <input name='stock' type='number' placeholder='0' />
+          <input
+            name='stock'
+            type='number'
+            placeholder='0'
+            value={form.stock}
+            onChange={handleInputChange}
+            required
+            min={0}
+          />
         </div>
 
         <div className='input-container'>
@@ -61,12 +129,13 @@ export function ProductForm({ hideFormModal, showForm }: Props) {
             name='thumbnail'
             type='text'
             placeholder='Image url'
-            value={thumbnailImg}
-            onChange={(e) => setThumbnailImg(e.currentTarget.value)}
+            value={form?.thumbnail}
+            onChange={handleInputChange}
+            required
           />
-          {thumbnailImg && (
+          {form?.thumbnail && (
             <img
-              src={thumbnailImg}
+              src={form.thumbnail}
               alt='Please enter a valid url'
               style={{ width: '100px', height: '100px' }}
             />

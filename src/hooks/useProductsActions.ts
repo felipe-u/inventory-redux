@@ -1,6 +1,10 @@
 import { useAppDispatch } from './store'
-import { type Product, type ProductId } from '../types'
-import { addNewProduct, deleteProductById } from '../store/products/slice'
+import { type Product, type ProductId, type ProductWithId } from '../types'
+import {
+  addNewProduct,
+  deleteProductById,
+  editProduct,
+} from '../store/products/slice'
 
 export const useProductsActions = () => {
   const dispatch = useAppDispatch()
@@ -19,5 +23,9 @@ export const useProductsActions = () => {
     dispatch(deleteProductById(id))
   }
 
-  return { addProduct, deleteProduct }
+  const updateProduct = (product: ProductWithId) => {
+    dispatch(editProduct(product))
+  }
+
+  return { addProduct, deleteProduct, updateProduct }
 }

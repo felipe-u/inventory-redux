@@ -5,10 +5,18 @@ import { ProductForm } from './components/ProductForm'
 import { useState } from 'react'
 
 function App() {
-  const [showForm, setShowForm] = useState({ show: false, mode: 'new' })
+  const [showForm, setShowForm] = useState<{
+    show: boolean
+    mode: string
+    productId: number | null
+  }>({
+    show: false,
+    mode: 'new',
+    productId: 0,
+  })
 
-  function showFormModal(mode: string) {
-    setShowForm({show: true, mode: mode})
+  function showFormModal(mode: string, productId: number | null) {
+    setShowForm({ show: true, mode: mode, productId: productId })
   }
 
   function hideFormModal() {
@@ -20,7 +28,9 @@ function App() {
       <h1>Inventory Redux Exercise</h1>
       <Filters />
       <ProductList showFormModal={showFormModal} />
-      {showForm.show && <ProductForm showForm={showForm} hideFormModal={hideFormModal} />}
+      {showForm.show && (
+        <ProductForm showForm={showForm} hideFormModal={hideFormModal} />
+      )}
     </div>
   )
 }
