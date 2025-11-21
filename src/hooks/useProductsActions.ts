@@ -10,14 +10,8 @@ import {
 export const useProductsActions = () => {
   const dispatch = useAppDispatch()
 
-  const addProduct = ({
-    title,
-    category,
-    price,
-    stock,
-    thumbnail,
-  }: Product) => {
-    dispatch(addNewProduct({ title, category, price, stock, thumbnail }))
+  const addProduct = (product: Product) => {
+    dispatch(addNewProduct(product))
   }
 
   const deleteProduct = (id: ProductId) => {
