@@ -1,11 +1,11 @@
-import { store } from '../store'
+import { useAppSelector } from '../hooks/store'
 
 interface Props {
   showFormModal: (mode: string) => void
 }
 
 export function ProductList({ showFormModal }: Props) {
-  const products = store.getState().products
+  const products = useAppSelector((state) => state.products)
 
   return (
     <section>
