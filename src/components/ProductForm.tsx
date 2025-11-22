@@ -3,6 +3,7 @@ import { useProductsActions } from '../hooks/useProductsActions'
 import { useAppSelector } from '../hooks/store'
 import { selectProductById } from '../store/products/selectors'
 import type { Product } from '../types'
+import { useUIActions } from '../hooks/useUIActions'
 
 const initialFormState = {
   title: '',
@@ -12,17 +13,17 @@ const initialFormState = {
   thumbnail: '',
 }
 
-interface Props {
-  hideFormModal: () => void
-  showForm: { show: boolean; mode: string; productId: number | null }
-}
-
-export function ProductForm({ hideFormModal, showForm }: Props) {
+export function ProductForm() {
   const { addProduct, updateProduct } = useProductsActions()
-  const productId = showForm.productId
+  const { closeFormModal } = useUIActions()
+
+  const uiOptions = useAppSelector((state) => state.ui)
+  const productId = uiOptions.selectedProductId
+
   const product = useAppSelector((state) =>
     productId ? selectProductById(state, productId) : null
   )
+  
   const [form, setForm] = useState<Product>(initialFormState)
 
   useEffect(() => {
@@ -48,14 +49,14 @@ export function ProductForm({ hideFormModal, showForm }: Props) {
       return
     }
 
-    if (showForm.mode === 'new') {
+    if (uiOptions.formModalMode === 'new') {
       addProduct(form)
     } else {
       updateProduct({ id: productId!, ...form })
     }
 
     setForm(initialFormState)
-    hideFormModal()
+    closeFormModal()
   }
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,7 +70,7 @@ export function ProductForm({ hideFormModal, showForm }: Props) {
 
   return (
     <div className='product-form-container'>
-      <h2>{showForm.mode === 'new' ? 'New' : 'Edit'} Product</h2>
+      <h2>{uiOptions.formModalMode === 'new' ? 'New' : 'Edit'} Product</h2>
       <form className='product-form' onSubmit={handleSubmit}>
         <div className='input-container'>
           <label htmlFor='title'>Name</label>
@@ -120,7 +121,7 @@ export function ProductForm({ hideFormModal, showForm }: Props) {
             onChange={handleInputChange}
             required
             min={0}
-            disabled={showForm.mode === 'edit'}
+            disabled={uiOptions.formModalMode === 'edit'}
           />
         </div>
 
@@ -144,7 +145,7 @@ export function ProductForm({ hideFormModal, showForm }: Props) {
         </div>
         <div className='btn-container'>
           <button type='submit'>Save</button>
-          <button type='reset' onClick={hideFormModal}>
+          <button type='reset' onClick={closeFormModal}>
             Cancel
           </button>
         </div>

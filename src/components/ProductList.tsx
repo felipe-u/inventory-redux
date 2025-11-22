@@ -1,14 +1,12 @@
 import { useAppSelector } from '../hooks/store'
 import { useProductsActions } from '../hooks/useProductsActions'
+import { useUIActions } from '../hooks/useUIActions'
 import type { ProductId } from '../types'
 
-interface Props {
-  showFormModal: (mode: string, productId: ProductId | null) => void
-}
-
-export function ProductList({ showFormModal }: Props) {
+export function ProductList() {
   const products = useAppSelector((state) => state.products)
   const { deleteProduct, updateStock } = useProductsActions()
+  const { openFormModal } = useUIActions()
 
   const handleStockAdj = (
     productId: ProductId,
@@ -39,7 +37,7 @@ export function ProductList({ showFormModal }: Props) {
         <tbody>
           <tr className='new-product-row'>
             <td colSpan={7}>
-              <button onClick={() => showFormModal('new', null)}>
+              <button onClick={() => openFormModal(true, 'new', -1)}>
                 New Product
               </button>
             </td>
@@ -63,7 +61,7 @@ export function ProductList({ showFormModal }: Props) {
                 <button onClick={() => updateStock(product.id, 1)}>+</button>
               </td>
               <td>
-                <button onClick={() => showFormModal('edit', product.id)}>
+                <button onClick={() => openFormModal(true, 'edit', product.id)}>
                   Edit
                 </button>
                 <button onClick={() => deleteProduct(product.id)}>
