@@ -1,4 +1,9 @@
-import { hideModal, setTitleFilter, showFormModal } from '../store/ui/slice'
+import {
+  hideModal,
+  setCategoryFilter,
+  setTitleFilter,
+  showFormModal,
+} from '../store/ui/slice'
 import type { ProductId } from '../types'
 import { useAppDispatch } from './store'
 
@@ -17,5 +22,14 @@ export const useUIActions = () => {
     dispatch(setTitleFilter(title))
   }
 
-  return { openFormModal, closeFormModal, onSetTitleFilter }
+  const onSetCategoryFilter = (category: string) => {
+    dispatch(setCategoryFilter(category))
+  }
+
+  return {
+    openFormModal,
+    closeFormModal,
+    onSetTitleFilter,
+    onSetCategoryFilter,
+  }
 }
