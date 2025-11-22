@@ -1,5 +1,6 @@
 import {
   hideModal,
+  resetFilters,
   setCategoryFilter,
   setTitleFilter,
   showFormModal,
@@ -26,10 +27,15 @@ export const useUIActions = () => {
     dispatch(setCategoryFilter(category))
   }
 
+  const onResetFilters = () => {
+    dispatch(resetFilters())
+  }
+
   return {
     openFormModal,
     closeFormModal,
     onSetTitleFilter,
     onSetCategoryFilter,
+    onResetFilters,
   }
 }

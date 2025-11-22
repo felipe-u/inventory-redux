@@ -23,7 +23,10 @@ export const UISlice = createSlice({
       state.formModalMode = action.payload.mode
       state.selectedProductId = action.payload.productId
     },
-    hideModal: () => initialState,
+    hideModal: (state) => {
+      state.isFormModalOpen = false
+      state.selectedProductId = -1
+    },
 
     setTitleFilter: (state, action: PayloadAction<string>) => {
       state.filters.title = action.payload
@@ -31,10 +34,16 @@ export const UISlice = createSlice({
     setCategoryFilter: (state, action: PayloadAction<string>) => {
       state.filters.category = action.payload
     },
+    resetFilters: () => initialState,
   },
 })
 
 export default UISlice.reducer
 
-export const { showFormModal, hideModal, setTitleFilter, setCategoryFilter } =
-  UISlice.actions
+export const {
+  showFormModal,
+  hideModal,
+  setTitleFilter,
+  setCategoryFilter,
+  resetFilters,
+} = UISlice.actions

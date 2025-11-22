@@ -4,7 +4,8 @@ import { useAppSelector } from '../hooks/store'
 import { allCategories } from '../store/products/selectors'
 
 export function Filters() {
-  const { onSetTitleFilter, onSetCategoryFilter } = useUIActions()
+  const { onSetTitleFilter, onSetCategoryFilter, onResetFilters } =
+    useUIActions()
   const categories = useAppSelector((state) => allCategories(state))
   const [titleInput, setTitleInput] = useState('')
 
@@ -51,6 +52,7 @@ export function Filters() {
         <h3>Products with low stock</h3>
         <button>Filter</button>
       </div>
+      <button onClick={onResetFilters}>Reset Filters</button>
     </header>
   )
 }
