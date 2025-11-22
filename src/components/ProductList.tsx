@@ -1,10 +1,11 @@
 import { useAppSelector } from '../hooks/store'
 import { useProductsActions } from '../hooks/useProductsActions'
 import { useUIActions } from '../hooks/useUIActions'
+import { filteredProducts } from '../store/products/selectors'
 import type { ProductId } from '../types'
 
 export function ProductList() {
-  const products = useAppSelector((state) => state.products)
+  const products = useAppSelector((state) => filteredProducts(state))
   const { deleteProduct, updateStock } = useProductsActions()
   const { openFormModal } = useUIActions()
 
