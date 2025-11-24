@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import type { ProductId } from '../../types'
+import type { ProductId, UIOptions } from '../../types'
 
-const initialState = {
+const initialState: UIOptions = {
   isFormModalOpen: false,
   selectedProductId: -1,
   formModalMode: 'new',
@@ -10,7 +10,7 @@ const initialState = {
 
 type ShowFormModalPayload = {
   show: boolean
-  mode: string
+  mode: 'new' | 'edit'
   productId: ProductId
 }
 

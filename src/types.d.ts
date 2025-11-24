@@ -9,5 +9,12 @@ export interface Product {
 }
 
 export interface ProductWithId extends Product {
-    id: ProductId
+  id: ProductId
+}
+
+export interface UIOptions {
+  isFormModalOpen: boolean
+  selectedProductId: ProductId
+  formModalMode: 'new' | 'edit'
+  filters: { title: string; category: strin }
 }
