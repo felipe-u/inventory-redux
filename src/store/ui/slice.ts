@@ -1,12 +1,17 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import type { ProductId, UIOptions } from '../../types'
 
-const initialState: UIOptions = {
+const DEFAULT_UI_OPTIONS = {
   isFormModalOpen: false,
   selectedProductId: -1,
   formModalMode: 'new',
   filters: { title: '', category: 'all' },
 }
+
+const initialState: UIOptions = (() => {
+  const persistedState = localStorage.getItem('_redux_inventory_ui_state_')
+  return persistedState ? JSON.parse(persistedState) : DEFAULT_UI_OPTIONS
+})()
 
 type ShowFormModalPayload = {
   show: boolean
