@@ -13,7 +13,7 @@ export const productsSlice = createSlice({
   name: 'products',
   initialState: initialState,
   reducers: {
-    getProducts: () => {},
+    getProducts: (state) => state,
     loadProducts: (state, action) => {
       return action.payload
     },

@@ -16,5 +16,5 @@ export interface UIOptions {
   isFormModalOpen: boolean
   selectedProductId: ProductId
   formModalMode: 'new' | 'edit'
-  filters: { title: string; category: strin }
+  filters: { title: string; category: string }
 }
