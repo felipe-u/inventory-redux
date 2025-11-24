@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import type { ProductId, UIOptions } from '../../types'
 
-const DEFAULT_UI_OPTIONS = {
+const DEFAULT_UI_OPTIONS: UIOptions = {
   isFormModalOpen: false,
   selectedProductId: -1,
   formModalMode: 'new',
@@ -39,7 +39,9 @@ export const UISlice = createSlice({
     setCategoryFilter: (state, action: PayloadAction<string>) => {
       state.filters.category = action.payload
     },
-    resetFilters: () => initialState,
+    resetFilters: (state) => {
+      state.filters = DEFAULT_UI_OPTIONS.filters
+    },
   },
 })
 

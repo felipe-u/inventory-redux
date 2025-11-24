@@ -1,7 +1,7 @@
 import type { Middleware } from '@reduxjs/toolkit'
 import { loadProducts } from '../products/slice'
 
-export const syncWithDBMiddleware: Middleware =
+export const loadProductsMiddleware: Middleware =
   (store) => (next) => async (action) => {
     if (action.type === 'products/getProducts') {
       try {

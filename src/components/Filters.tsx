@@ -2,17 +2,27 @@ import { useState } from 'react'
 import { useUIActions } from '../hooks/useUIActions'
 import { useAppSelector } from '../hooks/store'
 import { allCategories } from '../store/products/selectors'
+import { filtersSelector } from '../store/ui/selectors'
 
 export function Filters() {
   const { onSetTitleFilter, onSetCategoryFilter, onResetFilters } =
     useUIActions()
+
+  const filters = useAppSelector((state) => filtersSelector(state))
   const categories = useAppSelector((state) => allCategories(state))
-  const [titleInput, setTitleInput] = useState('')
+
+  const [titleInput, setTitleInput] = useState(filters.title)
 
   const handleNameFilter = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      onSetTitleFilter(titleInput.toLocaleLowerCase().trim())
+      const cleanInput = titleInput.trim().toLowerCase()
+      onSetTitleFilter(cleanInput)
     }
+  }
+
+  const handleReset = () => {
+    onResetFilters()
+    setTitleInput('')
   }
 
   return (
@@ -26,6 +36,7 @@ export function Filters() {
           onKeyDown={handleNameFilter}
         />
       </div>
+
       <div className='cat-filter'>
         <h3>Search by category</h3>
 
@@ -33,11 +44,10 @@ export function Filters() {
           <select
             name='category'
             id='category'
+            value={filters.category}
             onChange={(e) => onSetCategoryFilter(e.target.value)}
           >
-            <option value='' disabled selected>
-              Categories
-            </option>
+            <option value='all'>All</option>
             {categories.map((cat) => (
               <option key={cat} value={cat}>
                 {cat}
@@ -52,7 +62,7 @@ export function Filters() {
         <h3>Products with low stock</h3>
         <button>Filter</button>
       </div>
-      <button onClick={onResetFilters}>Reset Filters</button>
+      <button onClick={handleReset}>Reset Filters</button>
     </header>
   )
 }
