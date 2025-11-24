@@ -5,10 +5,15 @@ import {
   adjustStock,
   deleteProductById,
   editProduct,
+  getProducts,
 } from '../store/products/slice'
 
 export const useProductsActions = () => {
   const dispatch = useAppDispatch()
+
+  const loadProducts = () => {
+    dispatch(getProducts())
+  }
 
   const addProduct = (product: Product) => {
     dispatch(addNewProduct(product))
@@ -26,5 +31,5 @@ export const useProductsActions = () => {
     dispatch(adjustStock({ id, adjust }))
   }
 
-  return { addProduct, deleteProduct, updateProduct, updateStock }
+  return { loadProducts, addProduct, deleteProduct, updateProduct, updateStock }
 }

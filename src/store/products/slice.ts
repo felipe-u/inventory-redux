@@ -13,6 +13,10 @@ export const productsSlice = createSlice({
   name: 'products',
   initialState: initialState,
   reducers: {
+    getProducts: () => {},
+    loadProducts: (state, action) => {
+      return action.payload
+    },
     addNewProduct: (state, action: PayloadAction<Product>) => {
       const id = generateRandomId()
       state.push({ id, ...action.payload })
@@ -40,5 +44,11 @@ export const productsSlice = createSlice({
 
 export default productsSlice.reducer
 
-export const { addNewProduct, deleteProductById, editProduct, adjustStock } =
-  productsSlice.actions
+export const {
+  getProducts,
+  loadProducts,
+  addNewProduct,
+  deleteProductById,
+  editProduct,
+  adjustStock,
+} = productsSlice.actions

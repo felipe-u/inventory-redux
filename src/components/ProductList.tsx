@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useAppSelector } from '../hooks/store'
 import { useProductsActions } from '../hooks/useProductsActions'
 import { useUIActions } from '../hooks/useUIActions'
@@ -6,8 +7,12 @@ import type { ProductId } from '../types'
 
 export function ProductList() {
   const products = useAppSelector((state) => filteredProducts(state))
-  const { deleteProduct, updateStock } = useProductsActions()
+  const { loadProducts, deleteProduct, updateStock } = useProductsActions()
   const { openFormModal } = useUIActions()
+
+  useEffect(() => {
+    loadProducts()
+  }, [])
 
   const handleStockAdj = (
     productId: ProductId,

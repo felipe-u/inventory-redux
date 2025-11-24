@@ -23,7 +23,7 @@ export function ProductForm() {
   const product = useAppSelector((state) =>
     productId ? selectProductById(state, productId) : null
   )
-  
+
   const [form, setForm] = useState<Product>(initialFormState)
 
   useEffect(() => {
@@ -61,7 +61,6 @@ export function ProductForm() {
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = event.target
-    console.log(name, value, type)
     setForm((prev) => ({
       ...prev,
       [name]: type === 'number' ? Number(value) : value,
