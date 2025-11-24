@@ -2,7 +2,10 @@ import { configureStore, Tuple } from '@reduxjs/toolkit'
 import productsReducer from './products/slice'
 import UIReducer from './ui/slice'
 import { persistUIOptionsMiddleware } from './middlewares/persists'
-import { loadProductsMiddleware } from './middlewares/syncWithDB'
+import {
+  loadProductsMiddleware,
+  syncWithDBMiddleware,
+} from './middlewares/syncWithDB'
 
 export const store = configureStore({
   reducer: {
@@ -10,5 +13,9 @@ export const store = configureStore({
     ui: UIReducer,
   },
   middleware: () =>
-    new Tuple(persistUIOptionsMiddleware, loadProductsMiddleware),
+    new Tuple(
+      persistUIOptionsMiddleware,
+      loadProductsMiddleware,
+      syncWithDBMiddleware
+    ),
 })
