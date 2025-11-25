@@ -3,6 +3,7 @@ import { ProductList } from './components/ProductList'
 import './App.css'
 import { Heading } from '@chakra-ui/react'
 import { ProductFormModal } from './components/ProductFormModal'
+import { Toaster } from 'sonner'
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Filters />
       <ProductList />
       <ProductFormModal />
+      <Toaster richColors/>
     </div>
   )
 }
