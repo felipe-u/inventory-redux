@@ -1,6 +1,7 @@
 import type { Middleware } from '@reduxjs/toolkit'
-import { loadProducts } from '../products/slice'
+import { loadProducts, rollbackProduct } from '../products/slice'
 import { toast } from 'sonner'
+import type { ProductWithId } from '@/types'
 
 export const loadProductsMiddleware: Middleware =
   (store) => (next) => async (action) => {
@@ -22,6 +23,8 @@ export const loadProductsMiddleware: Middleware =
 export const syncWithDBMiddleware: Middleware =
   (store) => (next) => async (action) => {
     const { type, payload } = action
+    const prevState = store.getState()
+
     next(action)
 
     if (type === 'products/addNewProduct') {
@@ -45,14 +48,22 @@ export const syncWithDBMiddleware: Middleware =
     }
 
     if (type === 'products/deleteProductById') {
+      const productId = payload
+      const product = prevState.products.find(
+        (product: ProductWithId) => product.id === productId
+      )
+      const index = prevState.products.findIndex(
+        (product: ProductWithId) => product.id === productId
+      )
       try {
-        const res = await fetch(`https://dummyjson.com/products/${payload}`, {
+        const res = await fetch(`https://dummyjson.com/products/${productId}`, {
           method: 'DELETE',
         })
         if (!res.ok) throw new Error()
         toast.success('Product deleted')
       } catch {
         toast.error('Error deleting product')
+        if (product) store.dispatch(rollbackProduct({ product, index }))
       }
     }
 

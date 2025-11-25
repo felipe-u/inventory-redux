@@ -7,6 +7,11 @@ type AdjustStockPayload = {
   adjust: number
 }
 
+type RollbackPayload = {
+  product: ProductWithId
+  index: number
+}
+
 const initialState: ProductWithId[] = []
 
 export const productsSlice = createSlice({
@@ -17,14 +22,17 @@ export const productsSlice = createSlice({
     loadProducts: (_, action) => {
       return action.payload
     },
+
     addNewProduct: (state, action: PayloadAction<Product>) => {
       const id = generateRandomId()
       state.push({ id, ...action.payload })
     },
+
     deleteProductById: (state, action: PayloadAction<ProductId>) => {
       const id = action.payload
       return state.filter((product) => product.id !== id)
     },
+
     editProduct: (state, action: PayloadAction<ProductWithId>) => {
       const index = state.findIndex(
         (product) => product.id === action.payload.id
@@ -32,12 +40,23 @@ export const productsSlice = createSlice({
       if (index === -1) return
       state[index] = action.payload
     },
+
     adjustStock: (state, action: PayloadAction<AdjustStockPayload>) => {
       const index = state.findIndex(
         (product) => product.id === action.payload.id
       )
       if (index === -1) return
       state[index].stock += action.payload.adjust
+    },
+
+    rollbackProduct: (state, action: PayloadAction<RollbackPayload>) => {
+      const { product, index } = action.payload
+
+      const isProductDefined = state.some((p) => p.id === product.id)
+
+      if (!isProductDefined) {
+        state.splice(index, 0, product)
+      }
     },
   },
 })
@@ -51,4 +70,5 @@ export const {
   deleteProductById,
   editProduct,
   adjustStock,
+  rollbackProduct,
 } = productsSlice.actions
