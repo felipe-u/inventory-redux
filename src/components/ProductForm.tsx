@@ -181,7 +181,9 @@ export function ProductForm() {
           </Field.Root>
 
           <Center w='100%' gap='7'>
-            <Button type='submit'>Save</Button>
+            <Button type='submit' colorPalette='purple'>
+              Save
+            </Button>
             <Button type='reset' onClick={closeFormModal}>
               Cancel
             </Button>

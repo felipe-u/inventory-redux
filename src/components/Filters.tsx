@@ -89,7 +89,7 @@ export function Filters() {
 
         <Box>
           <Text pb='3'>Products with low stock</Text>
-          <Button colorPalette='teal'>Filter</Button>
+          <Button colorPalette='purple' variant='surface'>Filter</Button>
         </Box>
       </Flex>
       <Separator />

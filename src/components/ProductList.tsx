@@ -41,8 +41,8 @@ export function ProductList() {
     <Box as='section' mt='10' mb='10'>
       <Box textAlign='right'>
         <Button
-          colorPalette='green'
-          variant='surface'
+          colorPalette='purple'
+          variant='solid'
           mb='5'
           onClick={() => openFormModal(true, 'new', -1)}
         >
@@ -51,30 +51,31 @@ export function ProductList() {
       </Box>
       <Table.Root
         variant='outline'
-        width='800px'
+        width='750px'
         tableLayout='fixed'
         stickyHeader
         interactive
+        colorPalette='purple'
       >
         <Table.Header>
           <Table.Row bg='bg.subtle'>
-            <Table.ColumnHeader textAlign='center' w='6%'>
+            <Table.ColumnHeader textAlign='center' w='8%'>
               Id
             </Table.ColumnHeader>
             <Table.ColumnHeader textAlign='center' w='14%'>
               Image
             </Table.ColumnHeader>
-            <Table.ColumnHeader w='20%'>Name</Table.ColumnHeader>
+            <Table.ColumnHeader w='18%'>Name</Table.ColumnHeader>
             <Table.ColumnHeader textAlign='center' w='12%'>
               Category
             </Table.ColumnHeader>
-            <Table.ColumnHeader textAlign='center' w='10%'>
+            <Table.ColumnHeader textAlign='center' w='12%'>
               Price
             </Table.ColumnHeader>
             <Table.ColumnHeader textAlign='center' w='14%'>
               Stock
             </Table.ColumnHeader>
-            <Table.ColumnHeader textAlign='center' w='22%'>
+            <Table.ColumnHeader textAlign='center' w='20%'>
               Actions
             </Table.ColumnHeader>
           </Table.Row>
@@ -126,7 +127,6 @@ export function ProductList() {
                     variant='surface'
                     aria-label='Edit Product'
                     onClick={() => openFormModal(true, 'edit', product.id)}
-                    _hover={{ colorPalette: 'green' }}
                   >
                     <EditIcon />
                   </IconButton>
@@ -134,7 +134,6 @@ export function ProductList() {
                     variant='surface'
                     aria-label='Delete Product'
                     onClick={() => deleteProduct(product.id)}
-                    _hover={{ colorPalette: 'red' }}
                   >
                     <DeleteIcon />
                   </IconButton>

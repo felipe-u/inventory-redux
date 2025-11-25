@@ -7,7 +7,7 @@ import { ProductFormModal } from './components/ProductFormModal'
 function App() {
   return (
     <div className='container'>
-      <Heading p='10' size='3xl' fontWeight='bold' color='teal.fg'>
+      <Heading p='10' size='3xl' fontWeight='bold' color='purple.fg'>
         Inventory Redux Exercise
       </Heading>
       <Filters />
