@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useUIActions } from '../hooks/useUIActions'
 import { useAppSelector } from '../hooks/store'
 import { allCategories } from '../store/products/selectors'
@@ -13,6 +13,7 @@ import {
   Separator,
   Text,
 } from '@chakra-ui/react'
+import { useDebounce } from '../hooks/useDebounce'
 
 export function Filters() {
   const { onSetTitleFilter, onSetCategoryFilter, onResetFilters } =
@@ -22,13 +23,12 @@ export function Filters() {
   const categories = useAppSelector((state) => allCategories(state))
 
   const [titleInput, setTitleInput] = useState(filters.title)
+  const debouncedInput = useDebounce(titleInput)
 
-  const handleNameFilter = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      const cleanInput = titleInput.trim().toLowerCase()
-      onSetTitleFilter(cleanInput)
-    }
-  }
+  useEffect(() => {
+    const cleanInput = debouncedInput.trim().toLowerCase()
+    onSetTitleFilter(cleanInput)
+  }, [debouncedInput])
 
   const handleReset = () => {
     onResetFilters()
@@ -51,7 +51,6 @@ export function Filters() {
             type='text'
             value={titleInput}
             onChange={(e) => setTitleInput(e.target.value)}
-            onKeyDown={handleNameFilter}
           />
         </Box>
 
@@ -89,7 +88,9 @@ export function Filters() {
 
         <Box>
           <Text pb='3'>Products with low stock</Text>
-          <Button colorPalette='purple' variant='surface'>Filter</Button>
+          <Button colorPalette='purple' variant='surface'>
+            Filter
+          </Button>
         </Box>
       </Flex>
       <Separator />
