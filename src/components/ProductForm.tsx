@@ -4,6 +4,18 @@ import { useAppSelector } from '../hooks/store'
 import { selectProductById } from '../store/products/selectors'
 import type { Product } from '../types'
 import { useUIActions } from '../hooks/useUIActions'
+import {
+  Box,
+  Button,
+  Center,
+  Field,
+  Flex,
+  Image,
+  Input,
+  NumberInput,
+  Text,
+} from '@chakra-ui/react'
+import { isValidUrl } from '../util'
 
 const initialFormState = {
   title: '',
@@ -25,6 +37,7 @@ export function ProductForm() {
   )
 
   const [form, setForm] = useState<Product>(initialFormState)
+  const [thumbnailError, setThumbnailError] = useState(false)
 
   useEffect(() => {
     if (productId && product) {
@@ -68,87 +81,113 @@ export function ProductForm() {
   }
 
   return (
-    <div className='product-form-container'>
-      <h2>{uiOptions.formModalMode === 'new' ? 'New' : 'Edit'} Product</h2>
+    <Box>
       <form className='product-form' onSubmit={handleSubmit}>
-        <div className='input-container'>
-          <label htmlFor='title'>Name</label>
-          <input
-            name='title'
-            type='text'
-            placeholder='Product name'
-            value={form.title}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-
-        <div className='input-container'>
-          <label htmlFor='category'>Category</label>
-          <input
-            name='category'
-            type='text'
-            placeholder='Product category'
-            value={form.category}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-
-        <div className='input-container'>
-          <label htmlFor='price'>Price</label>
-          <span> $</span>
-          <input
-            name='price'
-            type='number'
-            placeholder='9.99'
-            value={form.price}
-            onChange={handleInputChange}
-            required
-            min={0}
-            step={0.01}
-          />
-        </div>
-
-        <div className='input-container'>
-          <label htmlFor='stock'>Stock</label>
-          <input
-            name='stock'
-            type='number'
-            placeholder='0'
-            value={form.stock}
-            onChange={handleInputChange}
-            required
-            min={0}
-            disabled={uiOptions.formModalMode === 'edit'}
-          />
-        </div>
-
-        <div className='input-container'>
-          <label htmlFor='thumbnail'>Thumbnail</label>
-          <input
-            name='thumbnail'
-            type='text'
-            placeholder='Image url'
-            value={form?.thumbnail}
-            onChange={handleInputChange}
-            required
-          />
-          {form?.thumbnail && (
-            <img
-              src={form.thumbnail}
-              alt='Please enter a valid url'
-              style={{ width: '100px', height: '100px' }}
+        <Flex flexDir='column' gap='5'>
+          <Field.Root>
+            <Field.Label>Name</Field.Label>
+            <Input
+              name='title'
+              type='text'
+              placeholder='Awesome chair'
+              value={form.title}
+              onChange={handleInputChange}
+              required
             />
-          )}
-        </div>
-        <div className='btn-container'>
-          <button type='submit'>Save</button>
-          <button type='reset' onClick={closeFormModal}>
-            Cancel
-          </button>
-        </div>
+          </Field.Root>
+
+          <Field.Root>
+            <Field.Label>Category</Field.Label>
+            <Input
+              name='category'
+              type='text'
+              placeholder='Furniture'
+              value={form.category}
+              onChange={handleInputChange}
+              required
+            />
+          </Field.Root>
+
+          <Field.Root>
+            <Field.Label>Price</Field.Label>
+            <NumberInput.Root
+              name='price'
+              value={form.price.toString()}
+              onValueChange={(value) => {
+                setForm((f) => ({ ...f, price: value.valueAsNumber }))
+              }}
+              required
+              step={0.01}
+              min={0}
+              formatOptions={{ style: 'currency', currency: 'USD' }}
+            >
+              <NumberInput.Control />
+              <NumberInput.Input />
+            </NumberInput.Root>
+          </Field.Root>
+
+          <Field.Root>
+            <Field.Label>Stock</Field.Label>
+            <NumberInput.Root
+              name='stock'
+              value={form.stock.toString()}
+              onValueChange={(value) => {
+                setForm((f) => ({ ...f, stock: value.valueAsNumber }))
+              }}
+              required
+              min={0}
+              disabled={uiOptions.formModalMode === 'edit'}
+            >
+              <NumberInput.Control />
+              <NumberInput.Input />
+            </NumberInput.Root>
+          </Field.Root>
+
+          <Field.Root>
+            <Field.Label>Thumbnail</Field.Label>
+            <Input
+              name='thumbnail'
+              type='text'
+              placeholder='Image Url'
+              value={form?.thumbnail}
+              onChange={(e) => {
+                setThumbnailError(false)
+                handleInputChange(e)
+              }}
+              required
+            />
+
+            {form.thumbnail &&
+              isValidUrl(form.thumbnail) &&
+              !thumbnailError && (
+                <Center w='100%'>
+                  <Image
+                    src={form.thumbnail}
+                    alt={thumbnailError ? '' : 'Thumbnail preview'}
+                    boxSize='300px'
+                    fit='cover'
+                    rounded='md'
+                    onError={() => setThumbnailError(true)}
+                    onLoad={() => setThumbnailError(false)}
+                  />
+                </Center>
+              )}
+
+            {thumbnailError && (
+              <Text color='red.700' p='5'>
+                The URL does not load a valid image
+              </Text>
+            )}
+          </Field.Root>
+
+          <Center w='100%' gap='7'>
+            <Button type='submit'>Save</Button>
+            <Button type='reset' onClick={closeFormModal}>
+              Cancel
+            </Button>
+          </Center>
+        </Flex>
       </form>
-    </div>
+    </Box>
   )
 }
