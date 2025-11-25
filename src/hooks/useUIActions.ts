@@ -11,7 +11,11 @@ import { useAppDispatch } from './store'
 export const useUIActions = () => {
   const dispatch = useAppDispatch()
 
-  const openFormModal = (show: boolean, mode: string, productId: ProductId) => {
+  const openFormModal = (
+    show: boolean,
+    mode: 'new' | 'edit',
+    productId: ProductId
+  ) => {
     dispatch(showFormModal({ show, mode, productId }))
   }
 
