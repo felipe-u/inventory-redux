@@ -3,6 +3,16 @@ import { useUIActions } from '../hooks/useUIActions'
 import { useAppSelector } from '../hooks/store'
 import { allCategories } from '../store/products/selectors'
 import { filtersSelector } from '../store/ui/selectors'
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  Input,
+  NativeSelect,
+  Separator,
+  Text,
+} from '@chakra-ui/react'
 
 export function Filters() {
   const { onSetTitleFilter, onSetCategoryFilter, onResetFilters } =
@@ -26,43 +36,72 @@ export function Filters() {
   }
 
   return (
-    <header>
-      <div className='name-filter'>
-        <h3>Search by name</h3>
-        <input
-          type='text'
-          value={titleInput}
-          onChange={(e) => setTitleInput(e.target.value)}
-          onKeyDown={handleNameFilter}
-        />
-      </div>
+    <Box as='header' borderWidth='2px' rounded='md'>
+      <Flex
+        alignItems='center'
+        justifyContent='space-around'
+        width='600px'
+        p='5'
+        textAlign='center'
+      >
+        <Box>
+          <Text pb='3'>Search by name</Text>
+          <Input
+            placeholder='Chair, Apple...'
+            type='text'
+            value={titleInput}
+            onChange={(e) => setTitleInput(e.target.value)}
+            onKeyDown={handleNameFilter}
+          />
+        </Box>
 
-      <div className='cat-filter'>
-        <h3>Search by category</h3>
+        <Box>
+          <Text pb='3'>Search by category</Text>
 
-        {categories.length > 0 ? (
-          <select
-            name='category'
-            id='category'
-            value={filters.category}
-            onChange={(e) => onSetCategoryFilter(e.target.value)}
-          >
-            <option value='all'>All</option>
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-        ) : (
-          <p>No products yet</p>
-        )}
-      </div>
-      <div className='stock-filter'>
-        <h3>Products with low stock</h3>
-        <button>Filter</button>
-      </div>
-      <button onClick={handleReset}>Reset Filters</button>
-    </header>
+          {categories.length > 0 ? (
+            <>
+              <NativeSelect.Root>
+                <NativeSelect.Field
+                  name='category'
+                  id='category'
+                  value={filters.category}
+                  onChange={(e) => onSetCategoryFilter(e.target.value)}
+                  textTransform='capitalize'
+                >
+                  <option value='all'>All</option>
+                  {categories.map((cat) => (
+                    <option
+                      key={cat}
+                      value={cat}
+                      style={{ textTransform: 'capitalize' }}
+                    >
+                      {cat}
+                    </option>
+                  ))}
+                </NativeSelect.Field>
+                <NativeSelect.Indicator />
+              </NativeSelect.Root>
+            </>
+          ) : (
+            <Text>No products yet</Text>
+          )}
+        </Box>
+
+        <Box>
+          <Text pb='3'>Products with low stock</Text>
+          <Button colorPalette='teal'>Filter</Button>
+        </Box>
+      </Flex>
+      <Separator />
+      <Center p='5'>
+        <Button
+          variant='outline'
+          _hover={{ colorPalette: 'red' }}
+          onClick={handleReset}
+        >
+          Reset Filters
+        </Button>
+      </Center>
+    </Box>
   )
 }

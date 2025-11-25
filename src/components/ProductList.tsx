@@ -4,6 +4,17 @@ import { useProductsActions } from '../hooks/useProductsActions'
 import { useUIActions } from '../hooks/useUIActions'
 import { filteredProducts } from '../store/products/selectors'
 import type { ProductId } from '../types'
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Group,
+  IconButton,
+  Image,
+  Table,
+} from '@chakra-ui/react'
+import { cutText } from '../util'
+import { DeleteIcon, EditIcon, MinusIcon, PlusIcon } from './Icons'
 
 export function ProductList() {
   const products = useAppSelector((state) => filteredProducts(state))
@@ -27,57 +38,112 @@ export function ProductList() {
   }
 
   return (
-    <section>
-      <table className='products-table'>
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>Image</th>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Price</th>
-            <th>Stock</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr className='new-product-row'>
-            <td colSpan={7}>
-              <button onClick={() => openFormModal(true, 'new', -1)}>
-                New Product
-              </button>
-            </td>
-          </tr>
+    <Box as='section' mt='10' mb='10'>
+      <Box textAlign='right'>
+        <Button
+          colorPalette='green'
+          variant='surface'
+          mb='5'
+          onClick={() => openFormModal(true, 'new', -1)}
+        >
+          Add Product
+        </Button>
+      </Box>
+      <Table.Root
+        variant='outline'
+        width='800px'
+        tableLayout='fixed'
+        stickyHeader
+        interactive
+      >
+        <Table.Header>
+          <Table.Row bg='bg.subtle'>
+            <Table.ColumnHeader textAlign='center' w='6%'>
+              Id
+            </Table.ColumnHeader>
+            <Table.ColumnHeader textAlign='center' w='14%'>
+              Image
+            </Table.ColumnHeader>
+            <Table.ColumnHeader w='20%'>Name</Table.ColumnHeader>
+            <Table.ColumnHeader textAlign='center' w='12%'>
+              Category
+            </Table.ColumnHeader>
+            <Table.ColumnHeader textAlign='center' w='10%'>
+              Price
+            </Table.ColumnHeader>
+            <Table.ColumnHeader textAlign='center' w='14%'>
+              Stock
+            </Table.ColumnHeader>
+            <Table.ColumnHeader textAlign='center' w='22%'>
+              Actions
+            </Table.ColumnHeader>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
           {products.map((product) => (
-            <tr key={product.id}>
-              <td>{product.id}</td>
-              <td>
-                <img src={product.thumbnail} alt={product.title} />
-              </td>
-              <td>{product.title}</td>
-              <td>{product.category}</td>
-              <td>${product.price}</td>
-              <td>
-                <button
-                  onClick={() => handleStockAdj(product.id, product.stock, -1)}
-                >
-                  -
-                </button>
-                {product.stock}
-                <button onClick={() => updateStock(product.id, 1)}>+</button>
-              </td>
-              <td>
-                <button onClick={() => openFormModal(true, 'edit', product.id)}>
-                  Edit
-                </button>
-                <button onClick={() => deleteProduct(product.id)}>
-                  Delete
-                </button>
-              </td>
-            </tr>
+            <Table.Row key={product.id}>
+              <Table.Cell textAlign='center'>{product.id}</Table.Cell>
+              <Table.Cell>
+                <Image
+                  src={product.thumbnail}
+                  borderRadius='full'
+                  boxSize='100px'
+                  fit='cover'
+                  alt={product.title}
+                />
+              </Table.Cell>
+              <Table.Cell>{cutText(product.title, 15)}</Table.Cell>
+              <Table.Cell textTransform='capitalize' textAlign='center'>
+                {product.category}
+              </Table.Cell>
+              <Table.Cell textAlign='center'>${product.price}</Table.Cell>
+              <Table.Cell textAlign='center'>
+                <Group attached borderWidth='1px' rounded='md'>
+                  <IconButton
+                    variant='surface'
+                    size='2xs'
+                    onClick={() =>
+                      handleStockAdj(product.id, product.stock, -1)
+                    }
+                  >
+                    <MinusIcon />
+                  </IconButton>
+                  <Box w='8' textAlign='center'>
+                    {product.stock}
+                  </Box>
+                  <IconButton
+                    variant='surface'
+                    size='2xs'
+                    onClick={() => updateStock(product.id, 1)}
+                  >
+                    <PlusIcon />
+                  </IconButton>
+                </Group>
+              </Table.Cell>
+              <Table.Cell textAlign='center'>
+                <ButtonGroup>
+                  <IconButton
+                    variant='surface'
+                    aria-label='Edit Product'
+                    onClick={() => openFormModal(true, 'edit', product.id)}
+                    _hover={{ colorPalette: 'green' }}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    variant='surface'
+                    aria-label='Delete Product'
+                    onClick={() => deleteProduct(product.id)}
+                    _hover={{ colorPalette: 'red' }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </ButtonGroup>
+              </Table.Cell>
+            </Table.Row>
           ))}
-        </tbody>
-      </table>
-    </section>
+        </Table.Body>
+      </Table.Root>
+    </Box>
   )
 }
