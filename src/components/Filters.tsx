@@ -11,13 +11,18 @@ import {
   Input,
   NativeSelect,
   Separator,
+  Switch,
   Text,
 } from '@chakra-ui/react'
 import { useDebounce } from '../hooks/useDebounce'
 
 export function Filters() {
-  const { onSetTitleFilter, onSetCategoryFilter, onResetFilters } =
-    useUIActions()
+  const {
+    onSetTitleFilter,
+    onSetCategoryFilter,
+    onSetLowStockFilter,
+    onResetFilters,
+  } = useUIActions()
 
   const filters = useAppSelector((state) => filtersSelector(state))
   const categories = useAppSelector((state) => allCategories(state))
@@ -87,10 +92,18 @@ export function Filters() {
         </Box>
 
         <Box>
-          <Text pb='3'>Products with low stock</Text>
-          <Button colorPalette='purple' variant='surface'>
-            Filter
-          </Button>
+          <Text pb='5'>Products with low stock</Text>
+
+          <Switch.Root
+            size='lg'
+            colorPalette='purple'
+            pb='1'
+            checked={filters.lowStock}
+            onCheckedChange={(e) => onSetLowStockFilter(e.checked)}
+          >
+            <Switch.HiddenInput />
+            <Switch.Control />
+          </Switch.Root>
         </Box>
       </Flex>
       <Separator />

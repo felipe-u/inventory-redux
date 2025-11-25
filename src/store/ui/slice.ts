@@ -5,7 +5,7 @@ const DEFAULT_UI_OPTIONS: UIOptions = {
   isFormModalOpen: false,
   selectedProductId: -1,
   formModalMode: 'new',
-  filters: { title: '', category: 'all' },
+  filters: { title: '', category: 'all', lowStock: false },
 }
 
 const initialState: UIOptions = (() => {
@@ -28,6 +28,7 @@ export const UISlice = createSlice({
       state.formModalMode = action.payload.mode
       state.selectedProductId = action.payload.productId
     },
+
     hideModal: (state) => {
       state.isFormModalOpen = false
       state.selectedProductId = -1
@@ -36,9 +37,15 @@ export const UISlice = createSlice({
     setTitleFilter: (state, action: PayloadAction<string>) => {
       state.filters.title = action.payload
     },
+
     setCategoryFilter: (state, action: PayloadAction<string>) => {
       state.filters.category = action.payload
     },
+
+    setLowStockFilter: (state, action: PayloadAction<boolean>) => {
+      state.filters.lowStock = action.payload
+    },
+
     resetFilters: (state) => {
       state.filters = DEFAULT_UI_OPTIONS.filters
     },
@@ -52,5 +59,6 @@ export const {
   hideModal,
   setTitleFilter,
   setCategoryFilter,
+  setLowStockFilter,
   resetFilters,
 } = UISlice.actions

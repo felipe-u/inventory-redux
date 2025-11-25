@@ -2,6 +2,7 @@ import {
   hideModal,
   resetFilters,
   setCategoryFilter,
+  setLowStockFilter,
   setTitleFilter,
   showFormModal,
 } from '../store/ui/slice'
@@ -31,6 +32,10 @@ export const useUIActions = () => {
     dispatch(setCategoryFilter(category))
   }
 
+  const onSetLowStockFilter = (showLowStock: boolean) => {
+    dispatch(setLowStockFilter(showLowStock))
+  }
+
   const onResetFilters = () => {
     dispatch(resetFilters())
   }
@@ -41,5 +46,6 @@ export const useUIActions = () => {
     onSetTitleFilter,
     onSetCategoryFilter,
     onResetFilters,
+    onSetLowStockFilter,
   }
 }

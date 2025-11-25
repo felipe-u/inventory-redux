@@ -12,8 +12,9 @@ export const filteredProducts = (state: RootState) => {
         .trim()
         .includes(state.ui.filters.title) &&
       (state.ui.filters.category === 'all'
-        ? product.category
-        : product.category === state.ui.filters.category)
+        ? product
+        : product.category === state.ui.filters.category) &&
+      (state.ui.filters.lowStock ? product.stock < 10 : product)
   )
 }
 
