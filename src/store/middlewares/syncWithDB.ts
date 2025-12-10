@@ -1,7 +1,7 @@
 import type { Middleware } from '@reduxjs/toolkit'
 import { loadProducts, rollbackProduct } from '../products/slice'
 import { toast } from 'sonner'
-import type { ProductWithId } from '@/types'
+import type { Product, ProductId, ProductWithId } from '../../types'
 
 export const loadProductsMiddleware: Middleware =
   (store) => (next) => async (action) => {
@@ -22,21 +22,22 @@ export const loadProductsMiddleware: Middleware =
 
 export const syncWithDBMiddleware: Middleware =
   (store) => (next) => async (action) => {
-    const { type, payload } = action
+    const { type, payload } = action as { type: string; payload: unknown }
     const prevState = store.getState()
 
     next(action)
 
     if (type === 'products/addNewProduct') {
+      const p = payload as Product
       try {
         const res = await fetch('https://dummyjson.com/products/add', {
           method: 'POST',
           body: JSON.stringify({
-            title: payload.title,
-            category: payload.category,
-            price: payload.price,
-            stock: payload.stock,
-            thumbnail: payload.thumbnail,
+            title: p.title,
+            category: p.category,
+            price: p.price,
+            stock: p.stock,
+            thumbnail: p.thumbnail,
           }),
           headers: { 'Content-Type': 'application/json' },
         })
@@ -48,7 +49,7 @@ export const syncWithDBMiddleware: Middleware =
     }
 
     if (type === 'products/deleteProductById') {
-      const productId = payload
+      const productId = payload as ProductId
       const product = prevState.products.find(
         (product: ProductWithId) => product.id === productId
       )
@@ -68,21 +69,19 @@ export const syncWithDBMiddleware: Middleware =
     }
 
     if (type === 'products/editProduct') {
+      const p = payload as ProductWithId
       try {
-        const res = await fetch(
-          `https://dummyjson.com/products/${payload.id}`,
-          {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              title: payload.title,
-              category: payload.category,
-              price: payload.price,
-              stock: payload.stock,
-              thumbnail: payload.thumbnail,
-            }),
-          }
-        )
+        const res = await fetch(`https://dummyjson.com/products/${p.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: p.title,
+            category: p.category,
+            price: p.price,
+            stock: p.stock,
+            thumbnail: p.thumbnail,
+          }),
+        })
         if (!res.ok) throw new Error()
         toast.success('Product updated')
       } catch {

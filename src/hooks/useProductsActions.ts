@@ -1,5 +1,5 @@
 import { useAppDispatch } from './store'
-import { type Product, type ProductId, type ProductWithId } from '../types'
+import type { Product, ProductId, ProductWithId } from '../types'
 import {
   addNewProduct,
   adjustStock,
